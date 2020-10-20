@@ -18,12 +18,16 @@ export default {
       audioContext: null,
       buffer: null,
       source: null,
+      convolver: null,
+      convolverGain: null,
       rate: 0.8
     }
   },
   mounted: function (){
     this.AudioContext =  new AudioContext();
     this.source = this.AudioContext.createBufferSource();
+    this.convolverGain = this.AudioContext.createGain();
+    this.convolver = this.AudioContext.createConvolver();
   },
   methods:{
     handlefile(e){
@@ -46,9 +50,14 @@ export default {
       if (this.AudioContext.state === 'suspended') this.AudioContext.resume();
       let buff = await this.AudioContext.decodeAudioData(this.buffer.slice(0));
       this.source.buffer = buff
-      this.source.playbackRate.value = this.rate;
-      this.source.connect(this.AudioContext.destination);
-      this.source.start(0,this.AudioContext.currentTime);
+      this.convolver.buffer = buff;
+      this.convolverGain.gain.value = 0.5;
+      //this.source.playbackRate.value = this.rate;
+      this.source.connect(this.convolverGain);
+      this.convolverGain.connect(this.convolver);
+      this.convolver.connect(this.AudioContext.destination);
+      //this.source.connect(this.AudioContext.destination);
+      this.source.start(0);
     }
   }
 }
