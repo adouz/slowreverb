@@ -3,61 +3,64 @@
     <input type="file" @change="handlefile">
     <input type="submit" value="play" @click="play">
     <input type="submit" value="stop" @click="stop">
-    <input type="text" name="rate" v-model="rate">
+    <p>
+      pitch rate
+      <input type="number" min="0.1" max="1" step="0.1" v-model="rate">
+      {{rate}}
+    </p>
+    <p>
+      reverb wet
+      <input type="number" min="0.1" max="1" step="0.1" v-model="wet">
+      {{wet}}
+    </p>
   </div>
 </template>
 
 <script>
-
+import * as Tone from 'tone'
 export default {
   name: 'App',
   components: {
   },
   data (){
     return {
-      audioContext: null,
       buffer: null,
-      source: null,
-      convolver: null,
-      convolverGain: null,
-      rate: 0.8
+      rate: 0.8,
+      fileurl: null,
+      player: null,
+      wet: 1,
+      offset:0,
+      startedAt:0
     }
   },
   mounted: function (){
-    this.AudioContext =  new AudioContext();
-    this.source = this.AudioContext.createBufferSource();
-    this.convolverGain = this.AudioContext.createGain();
-    this.convolver = this.AudioContext.createConvolver();
   },
   methods:{
     handlefile(e){
       const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.buffer = reader.result; 
-        this.play();
-      }
-      reader.readAsArrayBuffer(file)
+      this.fileurl =  URL.createObjectURL(file);
+      this.offset = 0;
+      this.startedAt = 0;
+      this.play();
     },
     stop(){
-      this.source.disconnect();
-      this.source.stop();
-      this.AudioContext.suspend();
-      this.source = this.AudioContext.createBufferSource();
+      this.offset = Tone.now() - this.startedAt;
+      this.player.stop();
+      console.log(Tone.now());
     },
     async play(){
-      console.log(this.buffer);
-      if (this.AudioContext.state === 'suspended') this.AudioContext.resume();
-      let buff = await this.AudioContext.decodeAudioData(this.buffer.slice(0));
-      this.source.buffer = buff
-      this.convolver.buffer = buff;
-      this.convolverGain.gain.value = 0.5;
-      //this.source.playbackRate.value = this.rate;
-      this.source.connect(this.convolverGain);
-      this.convolverGain.connect(this.convolver);
-      this.convolver.connect(this.AudioContext.destination);
-      //this.source.connect(this.AudioContext.destination);
-      this.source.start(0);
+      const reverb = new Tone.Reverb({
+        decay: 2.5,
+        wet: this.wet
+      }).toDestination();
+      this.player = new Tone.Player(this.fileurl).connect(reverb);
+      this.player.playbackRate = this.rate;
+      this.player.loop = true;
+      Tone.loaded().then(() => {
+        this.startedAt = Tone.now() - this.offset
+        this.player.start(0,this.offset);
+      });
+      //player.autostart = true;
     }
   }
 }
