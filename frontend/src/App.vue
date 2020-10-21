@@ -22,6 +22,10 @@
     <input type="file" @change="start">
     <input type="submit" value="play" @click="play">
     <input type="submit" value="stop" @click="stop">
+    <p>
+      <audio ref="audio"></audio>
+      <a ref="audioDownload">d</a>
+    </p>
   </div>
 </template>
 
@@ -36,12 +40,14 @@ export default {
       buffer: null,
       fileurl: null,
       player: null,
+      madiaRec: null,
       offset:0,
       startedAt:0,
       playback: 0.8,
       wet: 0.6,
       decay: 2,
-      preDelay: 0.0
+      preDelay: 0.0,
+      chunks: []
     }
   },
   mounted: function (){
@@ -61,6 +67,7 @@ export default {
     stop(){
       this.offset = Tone.now() - this.startedAt;
       this.player.stop();
+      this.madiaRec.stop();
       console.log(Tone.now());
     },
     play(){
@@ -70,12 +77,33 @@ export default {
         preDelay: this.preDelay
       }).toDestination();
       this.player = new Tone.Player(this.fileurl).connect(reverb);
+      reverb.connect(this.mediaStream());
       this.player.playbackRate = this.playback;
       this.player.loop = true;
       Tone.loaded().then(() => {
         this.startedAt = Tone.now() - this.offset
         this.player.start(0,this.offset);
+        this.madiaRec.start();
       });
+    },
+    mediaStream(){
+      const dest = Tone.context.createMediaStreamDestination();
+      this.madiaRec = new MediaRecorder(dest.stream);
+      this.madiaRec.ondataavailable = (e) => {this.chunks.push(e.data)}
+      this.madiaRec.onstop = (e) => {
+        e
+        let audio = this.$refs["audio"];
+        let Download = this.$refs["audioDownload"];
+        audio.setAttribute('controls', '');
+        audio.controls = true;
+        let blob = new Blob(this.chunks, { 'type' : 'audio/mp3' });
+        this.chunks = [];
+        let audioURL = URL.createObjectURL(blob);
+        audio.src = audioURL;
+        Download.href=audioURL;
+        Download.download= "audio.mp3";
+      }
+      return dest;
     }
   }
 }
