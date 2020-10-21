@@ -17,10 +17,6 @@
       <input type="number" min="0" max="1" step="0.01" v-model="preDelay">
     </p>
     <p>
-      detune
-      <input type="number" min="0" max="100" step="10" v-model="detune">
-    </p>
-    <p>
       <input type="submit" value="start" @click="start">
     </p>
     <input type="file" @change="start">
@@ -43,10 +39,9 @@ export default {
       offset:0,
       startedAt:0,
       playback: 0.8,
-      wet: 1,
-      decay: 3,
-      preDelay: 0.0,
-      detune: 10
+      wet: 0.6,
+      decay: 2,
+      preDelay: 0.0
     }
   },
   mounted: function (){
@@ -74,15 +69,13 @@ export default {
         wet: this.wet,
         preDelay: this.preDelay
       }).toDestination();
-      this.player = new Tone.GrainPlayer(this.fileurl).connect(reverb);
+      this.player = new Tone.Player(this.fileurl).connect(reverb);
       this.player.playbackRate = this.playback;
-      this.player.detune = this.detune;
       this.player.loop = true;
       Tone.loaded().then(() => {
         this.startedAt = Tone.now() - this.offset
         this.player.start(0,this.offset);
       });
-      //player.autostart = true;
     }
   }
 }
