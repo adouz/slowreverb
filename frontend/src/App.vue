@@ -22,15 +22,19 @@
     <input type="file" @change="start">
     <input type="submit" value="play" @click="play">
     <input type="submit" value="stop" @click="stop">
+    <input type="submit" value="render" @click="rendertest">
+    <input type="submit" value="play" ref="click">
     <p>
       <audio ref="audio"></audio>
       <a ref="audioDownload">d</a>
     </p>
+      <a ref="rendered">rendered</a>
   </div>
 </template>
 
 <script>
 import * as Tone from 'tone'
+import * as toWav from 'audiobuffer-to-wav'
 export default {
   name: 'App',
   components: {
@@ -62,13 +66,74 @@ export default {
       if (this.player && this.player.state === "started") this.stop();
       this.offset = 0;
       this.startedAt = 0;
-      this.play();
+      //this.play();
     },
     stop(){
       this.offset = Tone.now() - this.startedAt;
       this.player.stop();
       this.madiaRec.stop();
       console.log(Tone.now());
+    },
+    rendertest(){
+		const player = new Tone.Player().toDestination();
+      var 
+        fileurl = this.fileurl;
+
+		const renderingPromise = Tone.Offline(({ transport }) => {
+
+        // const reverb = new Tone.Reverb({
+        //   decay: decay,
+        //   wet: wet,
+        //   preDelay: preDelay
+        // }).toDestination();
+
+      const play = new Tone.Player(fileurl).toDestination();
+      Tone.loaded().then(()=> {
+        player.start(0);
+        console.log('done')
+      })
+      play.loop = false;
+			//transport.bpm.value = 150;
+			transport.start();
+			// return a promise 
+			return play.ready;
+		}, 60);
+
+		// set the buffer when it's done
+    renderingPromise.then(buffer => player.buffer = buffer);
+    this.$refs["click"].onclick = () => {
+      player.start()
+    }
+    
+    },
+    render(){
+      var audio = this.$refs["audio"], renderedElm = this.$refs["rendered"], 
+      playback = this.playback, decay = this.decay, wet = this.wet, 
+      preDelay = this.preDelay, player = this.player, fileurl = this.fileurl;
+      Tone.Offline(function(){
+        const reverb = new Tone.Reverb({
+          decay: decay,
+          wet: wet,
+          preDelay: preDelay
+        }).toDestination();
+        player = new Tone.Player(fileurl).connect(reverb);
+        player.playbackRate = playback;
+        // reverb.connect(this.mediaStream());
+        // player.loop = true;
+        // Tone.loaded().then(() => {
+        //   this.startedAt = Tone.now() - this.offset
+        //   this.player.start(0,this.offset);
+        //   this.madiaRec.start();
+        // }); 
+      }, 60).then(function(buffer){
+        const wav = toWav(buffer);
+        let blob  = new Blob([wav], {'type': "audio/wav"})
+        let new_file = URL.createObjectURL(blob)
+        audio.src = new_file;
+        renderedElm.href = new_file;
+        renderedElm.download = "salina.wav";
+        console.log(wav);
+      })
     },
     play(){
       const reverb = new Tone.Reverb({
