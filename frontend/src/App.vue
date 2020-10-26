@@ -55,10 +55,10 @@ export default {
   },
   methods:{
     start(e){
-      e
       if (e.target.files){
         const file = e.target.files[0];
         this.fileurl =  URL.createObjectURL(file);
+        this.renderFileName = "adouz "+file.name.split('.')[0];
       }
       if (this.player && this.player.state === "started") this.stop();
       this.offset = 0;
@@ -66,7 +66,7 @@ export default {
       const audio = new Audio();
       audio.src = this.fileurl;
       audio.onloadedmetadata = () => {
-        this.renderTime = audio.duration * (0.9-this.playback);
+        this.renderTime = audio.duration * (2.01-this.playback);
         console.log(audio.duration, this.renderTime)
       }
       this.play();
@@ -76,7 +76,7 @@ export default {
       this.player.stop();
     },
     render(){
-      var renderedElm = this.$refs["rendered"],
+      var renderedElm = this.$refs["rendered"], filename = this.renderFileName,
       playback = this.playback, decay = this.decay, wet = this.wet, 
       preDelay = this.preDelay, fileurl = this.fileurl;
       Tone.Offline(async function(){
@@ -92,9 +92,8 @@ export default {
         const wav = toWav(buffer);
         let blob  = new Blob([wav], {'type': "audio/wav"})
         let new_file = URL.createObjectURL(blob)
-        audio.src = new_file;
         renderedElm.href = new_file;
-        renderedElm.download = "salina.wav";
+        renderedElm.download = filename;
       })
     },
     play(){
