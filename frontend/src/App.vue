@@ -4,36 +4,36 @@
       <h1>slow + reverb</h1>
     </div>
     <div class="paper container container-sm margin-top-large">
+      <div class="row flex-center margin-bottom-large">
+        <input type="file" @change="start">
+      </div>
       <div class="form-group">
         <label for="percentage">playback rate</label>
         <input class="input-block" type="range" step="0.01" min="0" max="1" v-model="playback" oninput="output.value = (this.value*100) + '%';">
         <output id="output" for="percentage">{{playback*100}}%</output>
       </div>
-      <p>
-        playback rate
-        <input type="number" min="0" max="1" step="0.1" v-model="playback">
-      </p>
-      <p>
-        reverb wet
-        <input type="number" min="0" max="1" step="0.1" v-model="wet">
-      </p>
-      <p>
+      <div class="form-group">
+        <label for="percentage">reverb wet</label>
+        <input class="input-block" type="range" step="0.01" min="0" max="1" v-model="wet" oninput="output.value = (this.value*100) + '%';">
+        <output id="output" for="percentage">{{wet*100}}%</output>
+      </div>
+      <!-- <p>
         reverb decay
         <input type="number" min="1" max="5" step="1" v-model="decay">
       </p>
       <p>
         reverb preDelay
         <input type="number" min="0" max="1" step="0.01" v-model="preDelay">
-      </p>
-      <p>
-        <input type="submit" value="start" @click="start">
-      </p>
-      <input type="file" @change="start">
-      <input type="submit" value="play" @click="play">
-      <input type="submit" value="stop" @click="stop">
-      <input type="submit" value="render" @click="render">
-      <input type="submit" value="play" ref="click">
-      <a ref="rendered">rendered</a>
+      </p> -->
+      <button class="btn-block" @click="start">START</button>
+      <div class="row flex-center margin">
+        <button class="margin" @click="play">play</button>
+        <button class="margin" @click="stop">stop</button>
+      </div>
+      <div class="row flex-center">
+        <input type="submit" value="render" @click="render">
+        <a ref="rendered">Download</a>
+      </div>
     </div>
   </div>
 </template>
@@ -126,4 +126,15 @@ export default {
 </script>
 
 <style>
+.paper {
+  background: rgba(255,255,255,0.6);
+}
+html {
+  background: url(https://64.media.tumblr.com/2195bad5ac104715e0aeaec8664251ef/tumblr_p4h06pHPTH1wxdq3zo1_500.gif) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+
+}
 </style>
