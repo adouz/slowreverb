@@ -1,36 +1,47 @@
 <template>
   <div id="app">
-    <p>
-      playback rate
-      <input type="number" min="0" max="1" step="0.1" v-model="playback">
-    </p>
-    <p>
-      reverb wet
-      <input type="number" min="0" max="1" step="0.1" v-model="wet">
-    </p>
-    <p>
-      reverb decay
-      <input type="number" min="1" max="5" step="1" v-model="decay">
-    </p>
-    <p>
-      reverb preDelay
-      <input type="number" min="0" max="1" step="0.01" v-model="preDelay">
-    </p>
-    <p>
-      <input type="submit" value="start" @click="start">
-    </p>
-    <input type="file" @change="start">
-    <input type="submit" value="play" @click="play">
-    <input type="submit" value="stop" @click="stop">
-    <input type="submit" value="render" @click="render">
-    <input type="submit" value="play" ref="click">
+    <div class="text-center">
+      <h1>slow + reverb</h1>
+    </div>
+    <div class="paper container container-sm margin-top-large">
+      <div class="form-group">
+        <label for="percentage">playback rate</label>
+        <input class="input-block" type="range" step="0.01" min="0" max="1" v-model="playback" oninput="output.value = (this.value*100) + '%';">
+        <output id="output" for="percentage">{{playback*100}}%</output>
+      </div>
+      <p>
+        playback rate
+        <input type="number" min="0" max="1" step="0.1" v-model="playback">
+      </p>
+      <p>
+        reverb wet
+        <input type="number" min="0" max="1" step="0.1" v-model="wet">
+      </p>
+      <p>
+        reverb decay
+        <input type="number" min="1" max="5" step="1" v-model="decay">
+      </p>
+      <p>
+        reverb preDelay
+        <input type="number" min="0" max="1" step="0.01" v-model="preDelay">
+      </p>
+      <p>
+        <input type="submit" value="start" @click="start">
+      </p>
+      <input type="file" @change="start">
+      <input type="submit" value="play" @click="play">
+      <input type="submit" value="stop" @click="stop">
+      <input type="submit" value="render" @click="render">
+      <input type="submit" value="play" ref="click">
       <a ref="rendered">rendered</a>
+    </div>
   </div>
 </template>
 
 <script>
 import * as Tone from 'tone'
 import * as toWav from 'audiobuffer-to-wav'
+import '../node_modules/papercss/dist/paper.css'
 export default {
   name: 'App',
   components: {

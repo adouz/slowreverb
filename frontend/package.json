@@ -10,6 +10,7 @@
   "dependencies": {
     "audiobuffer-to-wav": "^1.0.0",
     "core-js": "^3.6.5",
+    "papercss": "^1.8.1",
     "tone": "^14.7.58",
     "vue": "^2.6.11"
   },
