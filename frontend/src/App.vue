@@ -1,11 +1,14 @@
 <template>
   <div id="app">
     <div class="text-center">
-      <h1>slow + reverb</h1>
+      <h1 class="title">slow + reverb</h1>
     </div>
     <div class="paper container container-sm margin-top-large">
       <div class="row flex-center margin-bottom-large">
         <input type="file" @change="start">
+      </div>
+      <div v-if="fileloading" class="progress margin-bottom">
+        <div :class="'bar striped success w-'+fileloading"></div>
       </div>
       <div class="form-group">
         <label for="percentage">playback rate</label>
@@ -34,6 +37,9 @@
         <input type="submit" value="render" @click="render">
         <a ref="rendered">Download</a>
       </div>
+      <div class="row flex-center">
+        <h5>made with 🖤 by <a href="https://www.instagram.com/ad0uz/">adouz</a></h5>
+      </div>
     </div>
   </div>
 </template>
@@ -59,7 +65,8 @@ export default {
       preDelay: 0.0,
       chunks: [],
       renderTime: 60,
-      renderFileName: 'none.wav'
+      renderFileName: 'none.wav',
+      fileloading: false
     }
   },
   mounted: function (){
@@ -67,6 +74,7 @@ export default {
   methods:{
     start(e){
       if (e.target.files){
+        this.fileloading = "20";
         const file = e.target.files[0];
         this.fileurl =  URL.createObjectURL(file);
         this.renderFileName = "adouz "+file.name.split('.')[0];
@@ -76,6 +84,7 @@ export default {
       this.startedAt = 0;
       const audio = new Audio();
       audio.src = this.fileurl;
+      this.fileloading = "50";
       audio.onloadedmetadata = () => {
         this.renderTime = audio.duration * (2.01-this.playback);
         console.log(audio.duration, this.renderTime)
@@ -116,9 +125,12 @@ export default {
       this.player = new Tone.Player(this.fileurl).connect(reverb);
       this.player.playbackRate = this.playback;
       this.player.loop = true;
+      this.fileloading = "90";
       Tone.loaded().then(() => {
+        this.fileloading = "100";
         this.startedAt = Tone.now() - this.offset
         this.player.start(0,this.offset);
+        this.fileloading = false;
       });
     }
   }
@@ -136,5 +148,9 @@ html {
   -o-background-size: cover;
   background-size: cover;
 
+}
+.title{
+  color: aliceblue;
+  text-shadow: 2px 2px 3px #000000;
 }
 </style>
