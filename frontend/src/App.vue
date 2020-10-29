@@ -20,25 +20,15 @@
         <input class="input-block" type="range" step="0.01" min="0" max="1" v-model="wet" oninput="output.value = (this.value*100) + '%';">
         <output id="output" for="percentage">{{wet*100}}%</output>
       </div>
-      <!-- <p>
-        reverb decay
-        <input type="number" min="1" max="5" step="1" v-model="decay">
-      </p>
-      <p>
-        reverb preDelay
-        <input type="number" min="0" max="1" step="0.01" v-model="preDelay">
-      </p> -->
       <button class="btn-block" @click="start">START</button>
       <div class="row flex-center margin">
-        <button class="margin" @click="play">play</button>
-        <button class="margin" @click="stop">stop</button>
+        <button class="btn-secondary-outline margin" @click="play">play</button>
+        <button class="btn-success-outline margin" @click="stop">stop</button>
+        <button class="btn-warning-outline margin" @click="render">render</button>
+        <a ref="rendered" :class="`paper-btn btn-danger-outline margin ${isDownload ? '':'disabled'}`">Download</a>
       </div>
       <div class="row flex-center">
-        <input type="submit" value="render" @click="render">
-        <a ref="rendered">Download</a>
-      </div>
-      <div class="row flex-center">
-        <h5>made with 🖤 by <a href="https://www.instagram.com/ad0uz/">adouz</a></h5>
+        <h5>made with 🖤 by <a href="https://www.instagram.com/ad0uz/" target="_blank">adouz</a></h5>
       </div>
     </div>
   </div>
@@ -66,7 +56,8 @@ export default {
       chunks: [],
       renderTime: 60,
       renderFileName: 'none.wav',
-      fileloading: false
+      fileloading: false,
+      isDownload: false
     }
   },
   mounted: function (){
@@ -113,6 +104,7 @@ export default {
         let blob  = new Blob([wav], {'type': "audio/wav"})
         let new_file = URL.createObjectURL(blob)
         renderedElm.href = new_file;
+        this.isDownload = true;
         renderedElm.download = filename;
       })
     },
