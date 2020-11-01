@@ -1,5 +1,11 @@
 # front
 [slow + reverb website](https://slowreverb.herokuapp.com/)
+
+# TODO
+[] download link is not working on heroku
+[] progress bar should be loading not frezzed
+[] play stop render download buttons should look better than a list of buttons
+
 ## Project setup
 ```
 npm install
