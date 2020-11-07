@@ -4,6 +4,10 @@
       <h1 class="title">slow + reverb</h1>
     </div>
     <div class="paper container container-sm margin-top-large">
+    <div v-if="error"  class="alert alert-danger dismissible">
+      {{error}}
+      <label @click="error = null" class="btn-close" for="alert-5">X</label>
+    </div>
       <div class="row flex-center margin-bottom-large">
         <input type="file" @change="start">
       </div>
@@ -12,22 +16,19 @@
       </div>
       <div class="form-group">
         <label for="percentage">playback rate</label>
-        <input class="input-block" type="range" step="0.01" min="0" max="1" v-model="playback" oninput="output.value = (this.value*100) + '%';">
-        <output id="output" for="percentage">{{playback*100}}%</output>
+        <input class="input-block" type="range" step="0.01" min="0.5" max="1" @mouseup="datachanged" v-model="playback" oninput="output.value = (this.value*100) + '%';">
+        <output id="output" for="percentage">{{Math.round(playback*100)}}%</output>
       </div>
       <div class="form-group">
         <label for="percentage">reverb wet</label>
-        <input class="input-block" type="range" step="0.01" min="0" max="1" v-model="wet" oninput="output.value = (this.value*100) + '%';">
-        <output id="output" for="percentage">{{wet*100}}%</output>
+        <input class="input-block" type="range" step="0.01" min="0" max="1" @mouseup="datachanged" v-model="wet" oninput="output.value = (this.value*100) + '%';">
+        <output id="output" for="percentage">{{Math.round(wet*100)}}%</output>
       </div>
-      <button class="btn-block" @click="start">START</button>
-      <div class="row flex-center margin">
-        <button class="btn-secondary-outline margin" @click="play">play</button>
-        <button class="btn-success-outline margin" @click="stop">stop</button>
-        <button class="btn-warning-outline margin" @click="render">render</button>
-        <a ref="rendered" :class="`paper-btn btn-danger-outline margin ${isDownload ? '':'disabled'}`">Download</a>
-      </div>
-      <div class="row flex-center">
+      <button class="btn-block" @click="play">{{ isPlaying ? 'PAUSE' : 'PLAY' }}</button>
+      <button class="btn-block margin-top" @click="replay">REPLAY</button>
+      <button class="btn-block btn-secondary-outline margin-top" @click="render">DOWNLOAD</button>
+      <a ref="rendered" style="display: none;"></a>
+      <div class="row flex-center margin-top">
         <h5>made with 🖤 by <a href="https://www.instagram.com/ad0uz/" target="_blank">adouz</a></h5>
       </div>
     </div>
@@ -57,18 +58,31 @@ export default {
       renderTime: 60,
       renderFileName: 'none.wav',
       fileloading: false,
-      isDownload: false
+      error: null,
+      isPlaying: false
     }
   },
   mounted: function (){
   },
   methods:{
+    datachanged(){
+      if (!this.fileurl) return this.error = 'upload audio first';
+      this.stop();
+      this.play();
+    },
+    replay(){
+      if (!this.fileurl) return this.error = 'upload audio first';
+      if (this.isPlaying) this.pause();
+      this.offset = 0;
+      this.startedAt = 0;
+      this.play();
+    },
     start(e){
       if (e.target.files){
         this.fileloading = "20";
         const file = e.target.files[0];
         this.fileurl =  URL.createObjectURL(file);
-        this.renderFileName = "adouz "+file.name.split('.')[0];
+        this.renderFileName = file.name.split('.')[0] + " 𝓼𝓵𝓸𝔀𝓮𝓭 + 𝓻𝓮𝓿𝓮𝓻𝓫";
       }
       if (this.player && this.player.state === "started") this.stop();
       this.offset = 0;
@@ -76,39 +90,44 @@ export default {
       const audio = new Audio();
       audio.src = this.fileurl;
       this.fileloading = "50";
-      audio.onloadedmetadata = () => {
-        this.renderTime = audio.duration * (2.01-this.playback);
-        console.log(audio.duration, this.renderTime)
-      }
+      audio.onloadedmetadata = () => this.renderTime = audio.duration * (2.01-this.playback);
       this.play();
     },
-    stop(){
+    pause(){
+      if (!this.fileurl) return this.error = 'upload audio first';
       this.offset = Tone.now() - this.startedAt;
       this.player.stop();
+      this.isPlaying = false;
     },
     render(){
-      var renderedElm = this.$refs["rendered"], filename = this.renderFileName,
-      playback = this.playback, decay = this.decay, wet = this.wet, 
-      preDelay = this.preDelay, fileurl = this.fileurl;
-      Tone.Offline(async function(){
+      if (!this.fileurl) return this.error = 'upload audio first';
+      this.fileloading = "10";
+      var renderedElm = document.createElement('a');
+      Tone.Offline(async () => {
+        this.fileloading = "40";
         const reverb = new Tone.Reverb({
-        decay: decay,
-        wet: wet,
-        preDelay: preDelay
-      }).toDestination();
-        const song = new Tone.Player(fileurl).connect(reverb);
-        song.playbackRate = playback;
-        await Tone.loaded().then(()=>{ song.start() })
-      }, this.renderTime).then(function(buffer){
+                        decay: this.decay,
+                        wet: this.wet,
+                        preDelay: this.preDelay
+                      }).toDestination();
+        const song = new Tone.Player(this.fileurl).connect(reverb);
+        song.playbackRate = this.playback;
+        await Tone.loaded().then(()=>{ song.start(),this.fileloading = "70"; })
+      }, this.renderTime).then((buffer) => {
+        this.fileloading = "90";
         const wav = toWav(buffer);
         let blob  = new Blob([wav], {'type': "audio/wav"})
         let new_file = URL.createObjectURL(blob)
         renderedElm.href = new_file;
-        this.isDownload = true;
-        renderedElm.download = filename;
+        renderedElm.download = this.renderFileName;
+        renderedElm.style.display = "none";
+        renderedElm.click();
+        this.fileloading = false;
       })
     },
     play(){
+      if (!this.fileurl) return this.error = 'upload audio first';
+      if (this.isPlaying) return this.pause();
       const reverb = new Tone.Reverb({
         decay: this.decay,
         wet: this.wet,
@@ -122,6 +141,7 @@ export default {
         this.fileloading = "100";
         this.startedAt = Tone.now() - this.offset
         this.player.start(0,this.offset);
+        this.isPlaying = true;
         this.fileloading = false;
       });
     }
@@ -144,5 +164,9 @@ html {
 .title{
   color: aliceblue;
   text-shadow: 2px 2px 3px #000000;
+}
+input[type=file] {
+  overflow: hidden;
+  text-overflow: clip;
 }
 </style>
