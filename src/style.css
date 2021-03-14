@@ -1,0 +1,102 @@
+  :root {
+    /* Set neon color */
+    --neon-text-color: #08f;
+    --neon-border-color: #f40;
+  
+  }
+  a {
+    background-image: none;
+  }
+  a:visited {
+    color: white;
+  }
+  #output {
+    float: right;
+    margin-bottom: 15px;
+  }
+  .paper {
+    background: rgba(255,255,255,0.6);
+  }
+  .black-bg{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #000000;
+    opacity: 0.4;
+    z-index: -1;
+  }
+
+  html {
+    /* background: url(https://64.media.tumblr.com/851415c6ba967ac5171e99cb8500dd96/tumblr_nnfl7gt0NJ1toe0eco1_500.gifv) no-repeat center center fixed; */
+    background-color: #252525;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  
+  }
+  .title{
+    margin: 0;
+    color: #fff;
+    text-transform: uppercase;
+    animation: flicker 1.5s infinite alternate;
+  }
+  
+  input[type=file] {
+    overflow: hidden;
+    text-overflow: clip;
+  }
+
+  .title::-moz-selection {
+    color: var(--neon-text-color);
+  }
+  
+  .title::selection {
+    color: var(--neon-text-color);
+  }
+  
+  .title:focus {
+    outline: none;
+  }
+
+  /* Animate neon flicker */
+  @keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { 
+      text-shadow:
+          -0.2rem -0.2rem 1rem #fff,
+          0.2rem 0.2rem 1rem #fff,
+          0 0 2rem var(--neon-text-color),
+          0 0 4rem var(--neon-text-color),
+          0 0 6rem var(--neon-text-color),
+          0 0 8rem var(--neon-text-color),
+          0 0 10rem var(--neon-text-color);
+    }
+  
+    20%, 24%, 55% {        
+      text-shadow: none;
+    }    
+  }
+
+  .container-sm {
+    border: 0.4rem solid #fff;
+    border-radius: 2rem;
+    box-shadow:
+    0 0 .5rem #fff,
+    inset 0 0 .5rem #fff,
+    0 0 2rem var(--neon-border-color),
+    inset 0 0 2rem var(--neon-border-color),
+    0 0 4rem var(--neon-border-color),
+    inset 0 0 4rem var(--neon-border-color);        
+  }
+
+  h1::-moz-selection {
+    background-color: var(--neon-border-color);
+  }
+  
+  h1::selection {
+    background-color: var(--neon-border-color);
+  }
+  
+  h1:focus {
+    outline: none;
+  }
