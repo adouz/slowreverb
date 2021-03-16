@@ -1,10 +1,13 @@
-# front
-[slow + reverb website](https://slowreverb.herokuapp.com/)
+# 𝓼𝓵𝓸𝔀 + 𝓻𝓮𝓿𝓻𝓮𝓫 Generator
+<img src="" />
 
-# TODO
-- [ ] download link is not working on heroku
-- [ ] progress bar should be loading not frezzed
-- [ ] play stop render download buttons should look better than a list of buttons
+# what's 𝓼𝓵𝓸𝔀 + 𝓻𝓮𝓿𝓻𝓮𝓫?
+a vue app where you can upload an audio and remix it to be slower and add the reverb effect.
+<img src="" />
+
+## TODO
+- [ ] change slow + reverb to slowed + reverb
+- [ ] 
 
 ## Project setup
 ```
