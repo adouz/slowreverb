@@ -13,8 +13,8 @@ you can use the generator on [𝓼𝓵𝓸𝔀 + 𝓻𝓮𝓿𝓻𝓮𝓫 websit
 ![website](https://i.imgur.com/KcHSPX3_d.webp?maxwidth=760&fidelity=grand)
 
 ## TODO
-- [ ] change slow + reverb to slowed + reverb
-- [ ] 
+- [x] change slow + reverb to slowed + reverb
+- [x] add metadata with vue-meta
 
 ## Project setup
 ```

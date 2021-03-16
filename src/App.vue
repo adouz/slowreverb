@@ -2,7 +2,7 @@
   <div id="app">
     <div ref="bg" class="black-bg"></div>
     <div class="text-center">
-      <h2 class="title">slow + reverb</h2>
+      <h2 class="title">slowed + reverb</h2>
     </div>
     <div class="paper container container-sm margin-top-large">
       <div v-if="error" class="alert alert-danger dismissible">
@@ -80,6 +80,17 @@ import "./style.css";
 
 export default {
   name: "App",
+  metaInfo: {
+    title: '𝓢𝓵𝓸𝔀𝓮𝓭 + 𝓡𝓮𝓿𝓮𝓻𝓫 Generator - slow and reverb any audio online',
+    base: { target: '_blank', href: '/' },
+    meta: [
+      { charset: 'utf-8' },
+      { name: 'description', content: 'Slowed + Reverb Generator Online. you can slow any song/audio and apply reverb effect to it, and also hear the audio in real-time and download it.' },
+      { name: 'keywords', content: 'slowed + reverb, slowed + reverb generator, slowed and reverb generator, slowed reverb app, slowed and reverb songs download, slow song' },
+      { name: 'viewport', content: 'width=device-width, initial-scale=1.0' },
+    ]
+
+  },
   components: {},
   data() {
     return {
