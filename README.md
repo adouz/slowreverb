@@ -1,9 +1,16 @@
+![logo](https://i.imgur.com/Pxgn0Ve.gif)
+
+---
+
 # 𝓼𝓵𝓸𝔀 + 𝓻𝓮𝓿𝓻𝓮𝓫 Generator
-<img src="https://i.imgur.com/Pxgn0Ve.gif" />
+you can use the generator on [𝓼𝓵𝓸𝔀 + 𝓻𝓮𝓿𝓻𝓮𝓫 website](https://slowreverb.herokuapp.com/).
+
+---
 
 # what's 𝓼𝓵𝓸𝔀 + 𝓻𝓮𝓿𝓻𝓮𝓫?
-a vue app where you can upload an audio and remix it to be slower and add the reverb effect.
-<img src="https://i.imgur.com/KcHSPX3_d.webp?maxwidth=760&fidelity=grand" />
+> a vue app where you can upload an audio and remix it to be slower and add the reverb effect.
+
+![website](https://i.imgur.com/KcHSPX3_d.webp?maxwidth=760&fidelity=grand)
 
 ## TODO
 - [ ] change slow + reverb to slowed + reverb
