@@ -2,12 +2,12 @@
 
 ---
 
-# 𝓼𝓵𝓸𝔀 + 𝓻𝓮𝓿𝓻𝓮𝓫 Generator
-you can use the generator on [𝓼𝓵𝓸𝔀 + 𝓻𝓮𝓿𝓻𝓮𝓫 website](https://slowreverb.herokuapp.com/).
+# 𝓢𝓵𝓸𝔀𝓮𝓭 + 𝓡𝓮𝓿𝓮𝓻𝓫 Generator
+you can use the generator on [𝓢𝓵𝓸𝔀𝓮𝓭 + 𝓡𝓮𝓿𝓮𝓻𝓫 website](https://slowreverb.herokuapp.com/).
 
 ---
 
-# what's 𝓼𝓵𝓸𝔀 + 𝓻𝓮𝓿𝓻𝓮𝓫?
+# what's 𝓢𝓵𝓸𝔀𝓮𝓭 + 𝓡𝓮𝓿𝓮𝓻𝓫?
 > a vue app where you can upload an audio and remix it to be slower and add the reverb effect.
 
 ![website](https://i.imgur.com/KcHSPX3_d.webp?maxwidth=760&fidelity=grand)
