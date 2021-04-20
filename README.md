@@ -13,9 +13,7 @@ you can use the generator on [𝓢𝓵𝓸𝔀𝓮𝓭 + 𝓡𝓮𝓿𝓮𝓻�
 ![website](https://i.imgur.com/KcHSPX3_d.webp?maxwidth=760&fidelity=grand)
 
 ## TODO
-- [x] change slow + reverb to slowed + reverb
-- [x] add metadata with vue-meta
-
+- [ ] -
 ## Project setup
 ```
 npm install
